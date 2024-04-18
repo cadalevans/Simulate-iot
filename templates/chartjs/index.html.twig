@@ -6,10 +6,11 @@
 <br><br>
  
  
- {{ render_chart(chart) }}
+ <div style="height: 500px;">
+        {{ render_chart(chart) }}
+    </div>
 
 {# You can pass HTML attributes as a second argument to add them on the <canvas> tag #}
-{{ render_chart(chart, {'class': 'my-chart'}) }}
 
     <br><br>
 {% endblock %}

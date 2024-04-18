@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,32 +13,36 @@ use Symfony\UX\Chartjs\Model\Chart;
 class ChartjsController extends AbstractController
 {
     #[Route('/chartjs', name: 'app_chartjs')]
-    public function index(ChartBuilderInterface $chartBuilder): Response
+    public function __invoke(ModuleRepository $packageRepository, ChartBuilderInterface $chartBuilder): Response
     {
-        $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
+        $package = $packageRepository->find('chartjs');
 
+        $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             'datasets' => [
                 [
-                    'label' => 'My First dataset',
-                    'backgroundColor' => 'rgb(255, 99, 132)',
+                    'label' => 'Cookies eaten 🍪',
+                    'backgroundColor' => 'rgb(255, 99, 132, .4)',
                     'borderColor' => 'rgb(255, 99, 132)',
-                    'data' => [0, 10, 5, 2, 20, 30, 45],
+                    'data' => [2, 10, 5, 18, 20, 30, 45],
+                    'tension' => 0.4,
+                ],
+                [
+                    'label' => 'Km walked 🏃‍♀️',
+                    'backgroundColor' => 'rgba(45, 220, 126, .4)',
+                    'borderColor' => 'rgba(45, 220, 126)',
+                    'data' => [10, 15, 4, 3, 25, 41, 25],
+                    'tension' => 0.4,
                 ],
             ],
         ]);
-
         $chart->setOptions([
-            'scales' => [
-                'y' => [
-                    'suggestedMin' => 0,
-                    'suggestedMax' => 100,
-                ],
-            ],
+            'maintainAspectRatio' => false,
         ]);
 
         return $this->render('chartjs/index.html.twig', [
+            'package' => $package,
             'chart' => $chart,
         ]);
     }
