@@ -42,7 +42,7 @@ class PersistDataCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            // Generate and persist random data
+            
             $this->generateAndPersistRandomData();
 
             $output->writeln('Random data persisted successfully.');
@@ -57,19 +57,19 @@ class PersistDataCommand extends Command
 
     private function generateAndPersistRandomData(): void
     {
-        // Get all modules from the database
+        
         $modules = $this->moduleRepository->findAll();
 
         // Generate random data and persist it for each module
         foreach ($modules as $module) {
             $data = new Data();
-            $data->setMeasuredValue(rand(1, 100)); // Example of random measured value
-            $data->setWorkingTime(new \DateTime()); // Current system date and time
-            $data->setSpeed(rand(1, 100)); // Example of random speed
-            $data->setTemperature(rand(1, 100)); // Example of random temperature
+            $data->setMeasuredValue(rand(1, 100));
+            $data->setWorkingTime(new \DateTime()); 
+            $data->setSpeed(rand(1, 100)); 
+            $data->setTemperature(rand(1, 100)); 
             $data->setModule($module);
 
-            // Persist entity
+            
             $this->entityManager->persist($data);
         }
 

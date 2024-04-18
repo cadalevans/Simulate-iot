@@ -9,36 +9,62 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use App\Repository\ModuleRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Module;
 
 #[AsCommand(
-    name: 'PersistModuleCommand',
+    name: 'app:persist-module',
     description: 'Add a short description for your command',
+    hidden: false,
+    aliases: ['app:add-module']
 )]
 class PersistModuleCommand extends Command
 {
+
+    private $entityManager;
+    private $moduleRepository;
+
+    public function __construct(EntityManagerInterface $entityManager, ModuleRepository $moduleRepository)
+    {
+        $this->entityManager = $entityManager;
+        $this->moduleRepository = $moduleRepository;
+
+        parent::__construct();
+    }
     protected function configure(): void
     {
-        $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+        $this->setDescription('Generate and persist random is_Operating for modules');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-        $arg1 = $input->getArgument('arg1');
+        try {
+            // Generate and persist random data
+            $this->generateAndPersistRandomModule();
 
-        if ($arg1) {
-            $io->note(sprintf('You passed an argument: %s', $arg1));
+            $output->writeln('Random is_Operating module persisted successfully.');
+
+            return Command::SUCCESS;
+        } catch (\Exception $e) {
+            $output->writeln('An error occurred: ' . $e->getMessage());
+
+            return Command::FAILURE;
         }
+    }
+    private function generateAndPersistRandomModule(): void
+    {
+        $modules = $this->moduleRepository->findAll();
 
-        if ($input->getOption('option1')) {
-            // ...
+        
+        foreach ($modules as $module) {
+            $module->setIsOperating((bool) rand(0, 1));
         }
-
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
-
-        return Command::SUCCESS;
+    
+        
+        $this->entityManager->flush();
     }
 }
+// command : php bin/console app:persist-module
+//linux link : https://www.brainvire.com/configure-cron-jobs-symfony/
+// on window we can see it on stack overflow : https://stackoverflow.com/questions/71352951/how-to-run-a-symfony-command-in-windows-task-scheduler

@@ -48,6 +48,14 @@ class ModuleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findModulesByUserId(int $userId): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.user = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
 //    public function findOneBySomeField($value): ?Module
 //    {
 //        return $this->createQueryBuilder('m')

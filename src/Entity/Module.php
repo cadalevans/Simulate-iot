@@ -28,7 +28,7 @@ class Module
     #[ORM\Column]
     private ?bool $isOperating = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $installationDate = null;
 
     #[ORM\OneToMany(targetEntity: Data::class, mappedBy: 'module')]

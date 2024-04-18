@@ -16,8 +16,8 @@ class ModuleType extends AbstractType
             ->add('name')
             ->add('category')
             ->add('description')
-            ->add('isOperating')
-            ->add('installationDate')
+            //->add('isOperating') because i am going to set it to true so all the new module should be working fine 
+            //->add('installationDate') it's going to take the current date so the user don't have to add it 
             //->add('user')
             // i hide the user so that it couldn't appear in the form 
         ;

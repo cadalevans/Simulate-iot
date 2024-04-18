@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<b>
+<br>
+
+ <h1>Modules</h1>
+ 
+<div class="container" style="max-width: 800px;">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="bg-info"><strong>Name</strong></th>
+                    <th class="bg-success"><strong>Description</strong></th>
+                    <th class="bg-warning"><strong>Category</strong></th>
+                    <th class="bg-info"><strong>IsOperating</strong></th>
+                    <th class="bg-success"><strong>Installation Date</strong></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for module in modules %}
+                    <tr>
+                        <td style="padding-left: 5px; padding-right: 5px;">{{ module.name }}</td>
+                        <td style="padding-left: 5px; padding-right: 5px;">{{ module.description }}</td>
+                        <td style="padding-left: 5px; padding-right: 5px;">{{ module.category }}</td>
+                        <td style="padding-left: 5px; padding-right: 5px;">{{ module.isOperating ? 'Yes' : 'No' }}</td>
+                        <td style="padding-left: 5px; padding-right: 5px;">{{ module.installationDate ? module.installationDate|date('Y-m-d H:i:s') : '' }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+    {% endblock %}
