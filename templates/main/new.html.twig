@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+
+
+
+
+
+
+
+
+    
+
+	
+
+{% block body %}
+
+
+<div class="container mt-4">
+
+
+    <h1>New Main Entry</h1>
+
+   
+
+
+
+
+
+
+    okok
+
+	<form method="post">
+		
+		<br><br><br>
+		<section class="vh-100">
+
+
+			<div class="container-fluid h-custom">
+				<div class="row d-flex justify-content-center align-items-center h-100">
+					<div class="col-md-9 col-lg-6 col-xl-5">
+						<img src="{{asset("build/images/draw2.webp")}}" class="img-fluid" alt="Sample image">
+					</div>
+					<div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+						<form>
+
+							<div class="input-group mb-3">
+								<div style="width:100%;text-align:center">
+								 
+								</div>
+							</div>
+							<!-- Test input -->
+
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">
+										<i class="fa fa-envelope fa-2x" aria-hidden="true"></i>
+									</span>
+								</div>
+								   {{ form_row(form.test, {
+            'attr': {
+                'class': 'form-control form-control-lg',
+                'placeholder': 'Votre placeholder ici',
+                'required': 'required'
+            }
+        }) }}
+							</div>
+
+							<!-- Password input -->
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text" id="basic-addon1">
+										<i class="fa fa-lock fa-2x" aria-hidden="true"></i>
+									</span>
+								</div>
+								{{ form_row(form.date, {
+    'attr': {
+        'class': 'form-control datetimepicker',
+        'placeholder': 'Select a date and time',
+        'autocomplete': 'off'  
+    }
+}) }}
+
+							</div>
+
+
+							<div
+								class="d-flex justify-content-between align-items-center">
+								<!-- Checkbox -->
+					
+
+								
+							</div>
+							
+							<div class="text-center text-lg-start mt-4 pt-2">
+
+
+								<button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">
+									<i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+									Save</button>
+								
+								
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+
+			</section>
+		</form>
+
+
+</div>
+{% endblock %}
