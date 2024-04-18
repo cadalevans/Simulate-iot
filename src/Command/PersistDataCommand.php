@@ -78,7 +78,7 @@ class PersistDataCommand extends Command
 }
 
 //Ok i have made all configuration, you just need to execute this command to add random data and 
-// you can easy configure the schedulled with plannificateur de tache on window but it's very simple on linux
+// you can easy configure the schedulled with plannificateur de tache on window but it's very simple on linux; sincerely it have take me some time to test it with task scheduler on window 
 // command : php bin/console app:persist-data
 //linux link : https://www.brainvire.com/configure-cron-jobs-symfony/
 // on window we can see it on stack overflow : https://stackoverflow.com/questions/71352951/how-to-run-a-symfony-command-in-windows-task-scheduler
