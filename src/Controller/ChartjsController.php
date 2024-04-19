@@ -13,37 +13,109 @@ use Symfony\UX\Chartjs\Model\Chart;
 class ChartjsController extends AbstractController
 {
     #[Route('/chartjs', name: 'app_chartjs')]
-    public function __invoke(ModuleRepository $packageRepository, ChartBuilderInterface $chartBuilder): Response
+    public function __invoke(ModuleRepository $moduleRepository, ChartBuilderInterface $chartBuilder): Response
     {
-        $package = $packageRepository->find('chartjs');
-
-        $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
-        $chart->setData([
-            'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-            'datasets' => [
-                [
-                    'label' => 'Cookies eaten 🍪',
-                    'backgroundColor' => 'rgb(255, 99, 132, .4)',
-                    'borderColor' => 'rgb(255, 99, 132)',
-                    'data' => [2, 10, 5, 18, 20, 30, 45],
-                    'tension' => 0.4,
+        // Retrieve the current user
+        $currentUser = $this->getUser();
+        if (!$currentUser) {
+            // Handle case where user is not logged in
+            // For example, redirect to login page
+        }
+        
+        // Retrieve the modules created by the current user
+        $modules = $moduleRepository->findBy(['user' => $currentUser]);
+    
+        // Prepare data for the charts
+        $charts = [];
+    
+        // Iterate through each module to retrieve data and create charts
+        foreach ($modules as $module) {
+            // Retrieve data associated with the module
+            $moduleData = $module->getData();
+    
+            // Prepare data points for the chart
+            $dataPoints = [];
+            $measuredValues = [];
+            $temperatures = [];
+            $speeds = [];
+    
+            // Extract data for y-axis
+            foreach ($moduleData as $data) {
+                $dataPoints[] = $data->getWorkingTime()->format('Y-m-d H:i:s'); // Keep as datetime
+                $measuredValues[] = $data->getMeasuredValue(); // Measured value data
+                $temperatures[] = $data->getTemperature(); // Temperature data
+                $speeds[] = $data->getSpeed(); // Speed data
+            }
+    
+            // Create chart for the module
+            $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
+            $chart->setData([
+                'labels' => $dataPoints, // X-axis labels (timestamps)
+                'datasets' => [
+                    [
+                        'label' => 'Measured Value',
+                        'backgroundColor' => 'rgba(100, 90, 96, 0.4)',
+                        'borderColor' => 'rgb(123, 110, 75)',
+                        'data' => $measuredValues, // Measured value data
+                        'tension' => 0.25,
+                    ],
+                    [
+                        'label' => 'Temperature',
+                        'backgroundColor' => 'rgba(203, 76, 132, 0.4)',
+                        'borderColor' => 'rgb(255, 99, 132)',
+                        'data' => $temperatures, // Temperature data
+                        'tension' => 0.25,
+                    ],
+                    [
+                        'label' => 'Speed',
+                        'backgroundColor' => 'rgba(45, 220, 126, .4)',
+                        'borderColor' => 'rgba(45, 220, 126)',
+                        'data' => $speeds, // Speed data
+                        'tension' => 0.25,
+                    ],
                 ],
-                [
-                    'label' => 'Km walked 🏃‍♀️',
-                    'backgroundColor' => 'rgba(45, 220, 126, .4)',
-                    'borderColor' => 'rgba(45, 220, 126)',
-                    'data' => [10, 15, 4, 3, 25, 41, 25],
-                    'tension' => 0.4,
+            ]);
+    
+            $chart->setOptions([
+                // set title plugin
+                'plugins' => [
+                    'title' => [
+                        'display' => true,
+                        'text' => sprintf(
+                            'Modules statistic chart from %dmya to %dmya',
+                            abs($data->getTemperature()),
+                            abs($data->getSpeed())
+                        ),
+                    ],
+                    'legend' => [
+                        'labels' => [
+                            'boxHeight' => 20,
+                            'boxWidth' => 50,
+                            'padding' => 20,
+                            'font' => [
+                                'size' => 14,
+                            ],
+                        ],
+                    ],
                 ],
-            ],
-        ]);
-        $chart->setOptions([
-            'maintainAspectRatio' => false,
-        ]);
-
+                'elements' => [
+                    'line' => [
+                        'borderWidth' => 5,
+                        'tension' => 0.25,
+                        'borderCapStyle' => 'round',
+                        'borderJoinStyle' => 'round',
+                    ],
+                ],
+                'maintainAspectRatio' => false,
+            ]);
+            // Add the chart to the list
+            $charts[] = $chart;
+        }
+    
         return $this->render('chartjs/index.html.twig', [
-            'package' => $package,
-            'chart' => $chart,
+            'charts' => $charts,
         ]);
     }
+    
+    
 }
