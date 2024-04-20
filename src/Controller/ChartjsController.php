@@ -108,14 +108,16 @@ class ChartjsController extends AbstractController
                 ],
                 'maintainAspectRatio' => false,
             ]);
-            // Add the chart to the list
-            $charts[] = $chart;
+    
+            // Add the chart to the list with module name as key
+            $charts[$module->getName()] = $chart;
         }
     
         return $this->render('chartjs/index.html.twig', [
             'charts' => $charts,
         ]);
     }
+    
     
     
 }
