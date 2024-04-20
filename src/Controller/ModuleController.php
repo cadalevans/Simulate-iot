@@ -11,15 +11,19 @@ use App\Form\ModuleType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use App\Repository\ModuleRepository;
+use App\Event\DatabaseChangeEvent;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 
 class ModuleController extends AbstractController
 {
+    private $eventDispatcher;
 
     private $security;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, EventDispatcherInterface $eventDispatcher)
     {
+        $this->eventDispatcher = $eventDispatcher;
         $this->security = $security;
     }
 
@@ -61,6 +65,7 @@ class ModuleController extends AbstractController
             $entityManager->persist($module);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Your module has been added.');
             return $this->redirectToRoute('module_add');
         }
 
@@ -71,7 +76,7 @@ class ModuleController extends AbstractController
 
 
     #[Route('/mod', name:'module_add')] 
-    public function new(ModuleRepository $moduleRepository): Response
+    public function new(ModuleRepository $moduleRepository,EventDispatcherInterface $eventDispatcher): Response
     {
         // Get the current user ID, you might have your own logic to retrieve it
         $userId = $this->getUser()->getId();
@@ -81,11 +86,14 @@ class ModuleController extends AbstractController
 
         // Do something with the modules
         // ...
-
+        // Inside your controller, service, or other relevant part of your code
+       
         return $this->render('module/new.html.twig', [
             'modules' => $modules,
         ]);
     }
 
+   
+    
     
 }

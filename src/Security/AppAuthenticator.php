@@ -68,10 +68,11 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             $request->attributes->set('_user', $user);
         }
 
-        
+       
         // Check if the user has the ROLE_ADMIN role
         if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
             // Redirect to the dashboard route for admins
+            
             return new RedirectResponse($this->urlGenerator->generate('dashboard'));
         } else {
             // Redirect to the main route for regular users

@@ -47,12 +47,12 @@ final class DataFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'measuredValue' => self::faker()->randomFloat(),
+            'measuredValue' => self::faker()->numberBetween(1, 100),
             //'module' => ModuleFactory::new(),
-            'speed' => self::faker()->randomFloat(),
-            'temperature' => self::faker()->randomFloat(),
+            'speed' =>self::faker()->numberBetween(1, 100), // Generate a random float between 1 and 100
+            'temperature' => self::faker()->numberBetween(1, 100),
             'workingTime' => self::faker()->dateTime(),
-            'module' => ModuleFactory::randomOrCreate(),
+            'module' => ModuleFactory::new()->create(),
         ];
     }
 

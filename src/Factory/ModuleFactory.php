@@ -51,7 +51,7 @@ final class ModuleFactory extends ModelFactory
             'installationDate' => self::faker()->dateTime(),
             'isOperating' => self::faker()->boolean(),
             'name' => self::faker()->realtext(10),
-            'user' => UserFactory::randomOrCreate(),
+            'user' => UserFactory::new()->create(),
         ];
     }
 

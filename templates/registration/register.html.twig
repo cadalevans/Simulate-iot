@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'style.html.twig' %}
 
 {% block home %}Register{% endblock %}
 
@@ -18,10 +18,13 @@
                 label: 'Password'
             }) }}
             {{ form_row(registrationForm.agreeTerms) }}
+            <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">
+									<i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+									Register</button>
             <button type="submit" class="btn">Register</button>
         {{ form_end(registrationForm) }}
     </form>
-
+<p>do you already have an email?<a href="{{ path('app_login') }}">click here login</a></p>
 <br>
 {% endblock %}
 

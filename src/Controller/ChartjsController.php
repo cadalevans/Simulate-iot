@@ -83,8 +83,8 @@ class ChartjsController extends AbstractController
                         'display' => true,
                         'text' => sprintf(
                             'Modules statistic chart from %dmya to %dmya',
-                            abs($data->getTemperature()),
-                            abs($data->getSpeed())
+                            abs(24*60*60),
+                            abs(5-24*60*60),
                         ),
                     ],
                     'legend' => [

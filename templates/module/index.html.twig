@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'base2.html.twig' %}
 
 {% block title %}Hello ModuleController!{% endblock %}
 
@@ -8,18 +8,35 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">
-    {{ form_start(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.category) }}
-        {{ form_row(form.description) }}
+<section class="vh-100">
+
+
+			<div class="container-fluid h-custom">
+				<div class="row d-flex justify-content-center align-items-center h-100">
+					<div class="col-md-9 col-lg-6 col-xl-5">
+						<img src="{{asset("build/images/draw2.webp")}}" class="img-fluid" alt="Sample image">
+					</div>
+					<div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                    <div class="example-wrapper">
+                    {{ form_start(form) }}
+                         {{ form_row(form.name) }}
+                             {{ form_row(form.category) }}
+                             {{ form_row(form.description) }}
      
        
 
-        <button type="submit" class="btn btn-primary">Save</button>
-    {{ form_end(form) }}
-</div>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                         {{ form_end(form) }}
+
+ 
+                    </div>
+                </div>
 
 
+			</div>
+		</div>
+	</div>
+<hr>
+<br>
 
 {% endblock %}

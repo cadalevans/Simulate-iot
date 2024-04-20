@@ -81,5 +81,5 @@ class PersistDataCommand extends Command
 // you can easy configure the schedulled with plannificateur de tache on window but it's very simple on linux; sincerely it have take me some time to test it with task scheduler on window 
 // command : php bin/console app:persist-data
 //linux link : https://www.brainvire.com/configure-cron-jobs-symfony/
-// on window we can see it on stack overflow : https://stackoverflow.com/questions/71352951/how-to-run-a-symfony-command-in-windows-task-scheduler
+// on window we can see it on stack overflow : https://stackoverflow.com/questions/71352951/how-to-run-a-symfony-command-in-windows-task-scheduler but actually doesn't work hope i can find another process
 

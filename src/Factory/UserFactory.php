@@ -7,6 +7,8 @@ use App\Repository\UserRepository;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
 use Zenstruck\Foundry\RepositoryProxy;
+use Illuminate\Support\Str;
+use Orchestra\Testbench\Factories\UserFactory as BaseUserFactory;
 
 /**
  * @extends ModelFactory<User>
@@ -29,6 +31,7 @@ use Zenstruck\Foundry\RepositoryProxy;
  */
 final class UserFactory extends ModelFactory
 {
+    protected $faker;
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -46,18 +49,34 @@ final class UserFactory extends ModelFactory
      */
     protected function getDefaults(): array
     {
-        return [
-            
-            'email' => 'moussima53@gmail.com',
-            'locale' => 'fr',
-            'password' => '$2y$13$w7usfxJhm1MP8qjT8TDNzOq.UuYWFuZszfwqX/agMwG8JeqWgacZ.',
-            'roles' => ['ROLE_ADMIN'],
-            'username' => 'Admin',
-            'is_verified' => 1,
-            // ok as you see i have added one user with fixture; the password is : 123456
-            
+        $baseEmail = 'user'; // Base email address
+    $counter = $this->faker()->unique()->numberBetween(1, 100); // Generate a unique counter
+
+    $email = sprintf('%s%d@example.com', $baseEmail, $counter); // Generate unique email
+
+    $roles = ['ROLE_ADMIN', 'ROLE_USER']; // Define available roles
+
+    // Select a random role from the available roles
+    $randomRole = $roles[array_rand($roles)];
+
+    return [
+        'email' => $email,// you can generate one unique email
+        'locale' => 'fr',
+        'password' => '$2y$13$w7usfxJhm1MP8qjT8TDNzOq.UuYWFuZszfwqX/agMwG8JeqWgacZ.', // you have to leave the encoded password as is, it's related to 123456
+        'roles' => [$randomRole], // Set the randomly selected role
+        'username' => 'Admin', // 'category' => self::faker()->realtext(10), you can do same to username so that it can change the name
+        'is_verified' => 1,
+        
         ];
+
     }
+    /*
+    why all that? it is because when creating user i havent yet configure the send email by symfony so we can't register
+    until i configure that but we can login that is while 
+    But finally not just for that because the Fixtures help us to add data very fastly in the database 
+    hope it would help 
+    Don't forget when login the password should be: 123456
+    */
 
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization

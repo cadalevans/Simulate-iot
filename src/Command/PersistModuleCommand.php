@@ -12,6 +12,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use App\Repository\ModuleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Module;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use App\Event\ModuleStatusChangeEvent;
+use App\Entity\Data;
 
 #[AsCommand(
     name: 'app:persist-module',
@@ -21,21 +24,24 @@ use App\Entity\Module;
 )]
 class PersistModuleCommand extends Command
 {
-
+    // Add event dispatcher
+    private $eventDispatcher;
     private $entityManager;
     private $moduleRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ModuleRepository $moduleRepository)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        ModuleRepository $moduleRepository,
+        EventDispatcherInterface $eventDispatcher // Inject event dispatcher
+    ) {
         $this->entityManager = $entityManager;
         $this->moduleRepository = $moduleRepository;
+        $this->eventDispatcher = $eventDispatcher; // Store event dispatcher
 
         parent::__construct();
     }
-    protected function configure(): void
-    {
-        $this->setDescription('Generate and persist random is_Operating for modules');
-    }
+
+    // Other methods...
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -52,16 +58,36 @@ class PersistModuleCommand extends Command
             return Command::FAILURE;
         }
     }
+
     private function generateAndPersistRandomModule(): void
     {
         $modules = $this->moduleRepository->findAll();
 
-        
         foreach ($modules as $module) {
-            $module->setIsOperating((bool) rand(0, 1));
+            // Set random isOperating value
+            $isOperating = (bool) rand(0, 1);
+            $module->setIsOperating($isOperating);
+           
+            // If module is not operating, create and persist new data entity with values 0
+            // so that in my chart the line can downgrade the user can see the zero value if a module is not workink based to is 
+        if (!$isOperating) {
+            $data = new Data();
+            $data->setMeasuredValue(0);
+            $data->setTemperature(0);
+            $data->setSpeed(0);
+            $data->setWorkingTime(new \DateTime()); // Set appropriate date
+            $data->setModule($module);
+
+            $this->entityManager->persist($data);
+             // Dispatch ModuleStatusChangeEvent event
+        $this->eventDispatcher->dispatch(new ModuleStatusChangeEvent($module));
         }
-    
-        
+         // Dispatch ModuleStatusChangeEvent event
+        $this->eventDispatcher->dispatch(new ModuleStatusChangeEvent($module));
+           
+        }
+
+        // Flush changes
         $this->entityManager->flush();
     }
 }
